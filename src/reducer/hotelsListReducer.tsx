@@ -1,7 +1,7 @@
 const DefaultState = {
   loading: false,
   data: [],
-  errrorMsg: "",
+  errorMsg: "",
 };
 
 const HotelsListReducer = (state = DefaultState, action: any) => {
