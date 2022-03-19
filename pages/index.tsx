@@ -13,23 +13,24 @@ const Home: NextPage = () => {
   const getData = (id = 1032) => {
     dispatch(GetHotelsList(id));
   };
-  const ShowData = () => {
+  const showData = () => {
     if (hotelsList.loading) {
       return <p>loading</p>;
     }
     if (!_.isEmpty(hotelsList.data)) {
       return (
         <>
-          <button onClick={() => console.log(getData())}></button>
+          <button onClick={() => console.log(hotelsList.data)}></button>
         </>
       );
     }
+
     if (hotelsList.errorMsg !== "") {
       return <p>{hotelsList.errorMsg}</p>;
     }
     return null;
   };
-  return <>{ShowData()}</>;
+  return <>{showData()}</>;
 };
 
 export default Home;

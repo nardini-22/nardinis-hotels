@@ -1,10 +1,10 @@
-import api from "../../pages/api/api";
+import api from "services/api";
 
 export const GetHotelsList = (id: number) => async (dispatch: any) => {
   try {
-    const res = await api.get(`/avail/${id}`);
+    const res = await api.get(`/list/${id}`);
     dispatch({ type: "HOTELS_LIST_SUCCESS", payload: res.data });
-  } catch (e) {
+  } catch (err) {
     dispatch({ type: "HOTELS_LIST_FAIL" });
   }
 };
