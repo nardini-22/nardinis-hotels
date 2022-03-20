@@ -1,13 +1,17 @@
-import { GetHotelsList } from "actions/hotelsActions";
+import Modal from "components/Modal";
+import Portal from "HOC/portal";
 import _ from "lodash";
 import { useState } from "react";
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
+import { GetHotelsList } from "redux/actions/hotelsActions";
 import { IHotelsListProps, IHotelsListReducer } from "typings/hotels";
+import Filter from "./filter";
 
 const Body = () => {
   const [city, setCity] = useState<string>("");
   const [pageNumber, setPageNumber] = useState<number>(0);
+  const [openModal, setOpenModal] = useState<boolean>(false);
   const dispatch = useDispatch();
   const hotelsList = useSelector(
     (state: IHotelsListReducer) => state.HotelsList
@@ -32,12 +36,21 @@ const Body = () => {
     let id = 0;
     if (city === "Porto Seguro") {
       id = 1032;
+      getData(id);
+      setOpenModal(true);
     } else if (city === "Rio de Janeiro") {
       id = 7110;
+      getData(id);
+      setOpenModal(true);
     } else if (city === "São Paulo") {
       id = 9626;
+      getData(id);
+      setOpenModal(true);
+    } else {
+      window.alert(
+        "Erro! Insira o nome correta da cidade (Ex: São Paulo, Porto Seguro ou Rio de Janeiro"
+      );
     }
-    getData(id);
   };
   const showData = () => {
     if (hotelsList.loading) {
@@ -76,7 +89,13 @@ const Body = () => {
           />
         </label>
         <button onClick={() => handleData()}>Pesquisar</button>
-        {showData()}
+       
+        <Filter />
+        <Portal>
+          <Modal open={openModal} closeModal={() => setOpenModal(false)}>
+            {showData()}
+          </Modal>
+        </Portal>
       </div>
     </>
   );

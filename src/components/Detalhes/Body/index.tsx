@@ -1,8 +1,8 @@
-import { GetHotelsDetails } from "actions/hotelsActions";
 import _ from "lodash";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { GetHotelsDetails } from "redux/actions/hotelsActions";
 import { IHotelsDetailsReducer, IHotelsListProps } from "typings/hotels";
 
 const Body = () => {
@@ -29,9 +29,13 @@ const Body = () => {
             <ul key={hotel.id}>
               <li>{hotel.name}</li>
               <li>{hotel.cityName}</li>
-              <li>{hotel.rooms[0].categoryName}</li>
-              <li>R$ {hotel.rooms[0].price.adult}</li>
-              <li>R$ {hotel.rooms[0].price.child}</li>
+              {hotel.rooms.map((room) => (
+                <>
+                  <li>{room.categoryName}</li>
+                  <li>R$ {room.price.adult}</li>
+                  <li>R$ {room.price.child}</li>
+                </>
+              ))}
             </ul>
           ))}
         </>

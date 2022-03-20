@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Dispatch } from "redux";
-import { IHotelsDispatchProps } from "typings/hotels";
+import { IHotelsDispatchProps, IHotelsParams } from "typings/hotels";
 
 export const GetHotelsList =
   (id: number) => async (dispatch: Dispatch<IHotelsDispatchProps>) => {
@@ -13,6 +13,23 @@ export const GetHotelsList =
       });
     } catch (err) {
       dispatch({ type: "HOTELS_LIST_FAIL" });
+    }
+  };
+
+export const GetHotelsListFilter =
+  ({ id, adult, child }: IHotelsParams) =>
+  async (dispatch: Dispatch<IHotelsDispatchProps>) => {
+    try {
+      dispatch({ type: "HOTELS_LIST_FILTER_LOADING" });
+      const res = await axios.get(
+        `api/hotels/list/filter/${id}/${adult}/${child}`
+      );
+      dispatch({
+        type: "HOTELS_LIST_FILTER_SUCCESS",
+        payload: res.data,
+      });
+    } catch (err) {
+      dispatch({ type: "HOTELS_LIST_FILTER_FAIL" });
     }
   };
 
