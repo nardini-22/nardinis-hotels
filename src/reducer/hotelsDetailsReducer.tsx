@@ -1,10 +1,12 @@
+import { IHotelsActionProps } from "typings/hotels";
+
 const DefaultState = {
   loading: false,
   data: [],
   errorMsg: "",
 };
 
-const HotelsDetailsReducer = (state = DefaultState, action: any) => {
+const HotelsDetailsReducer = (state = DefaultState, action: IHotelsActionProps) => {
   switch (action.type) {
     case "HOTELS_DETAILS_LOADING":
       return {

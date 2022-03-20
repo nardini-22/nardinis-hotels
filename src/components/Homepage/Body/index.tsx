@@ -2,14 +2,16 @@ import { GetHotelsList } from "actions/hotelsActions";
 import _ from "lodash";
 import { useState } from "react";
 import ReactPaginate from "react-paginate";
-import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
-import { IHotelsListProps } from "typings/hotels";
+import { useDispatch, useSelector } from "react-redux";
+import { IHotelsListProps, IHotelsListReducer } from "typings/hotels";
 
 const Body = () => {
   const [city, setCity] = useState<string>("");
   const [pageNumber, setPageNumber] = useState<number>(0);
   const dispatch = useDispatch();
-  const hotelsList = useSelector((state: RootStateOrAny) => state.HotelsList);
+  const hotelsList = useSelector(
+    (state: IHotelsListReducer) => state.HotelsList
+  );
   const getData = (id: number) => {
     dispatch(GetHotelsList(id));
   };
@@ -22,6 +24,7 @@ const Body = () => {
       <ul key={hotel.id}>
         <li>{hotel.name}</li>
         <li>{hotel.cityName}</li>
+        <a href={`/${hotel.id}`}>Detalhes</a>
       </ul>
     ));
   const handleData = () => {
