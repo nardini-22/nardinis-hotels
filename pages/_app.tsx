@@ -1,7 +1,7 @@
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { Provider } from "react-redux";
-import Store from "store";
+import Store from "redux/store";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyle, theme } from "styles/global";
 
