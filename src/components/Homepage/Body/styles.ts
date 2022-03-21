@@ -111,6 +111,17 @@ export const Input = styled.input`
   }
 `;
 
+export const Select = styled.select`
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background: #f5f6f8;
+  border: 1px solid transparent;
+  &:focus {
+    outline: none;
+    border: 1px solid ${(props) => props.theme.main.primary};
+  }
+`;
+
 export const SearchContainer = styled.div`
   width: 50%;
   @media screen and (max-width: 767px) {
@@ -162,7 +173,6 @@ export const HotelsContainer = styled.div`
     font-size: 1.2rem;
   }
 `;
-
 
 export const HotelsDetailsContainer = styled(HotelsContainer)`
   width: 50vw;
