@@ -1,9 +1,14 @@
+import { darken, lighten } from "polished";
 import { createGlobalStyle } from "styled-components";
 
 export const theme = {
   main: {
     primary: "#0072FB",
+    primaryLight: lighten(0.1, "#0072FB"),
+    primaryDark: darken(0.1, "#0072FB"),
     secondary: "#001F69",
+    secondaryLight: lighten(0.1, "#001F69"),
+    secondaryDark: darken(0.1, "#001F69"),
     primaryText: "#000",
     secondaryText: "#fff",
   },
@@ -23,8 +28,18 @@ export const GlobalStyle = createGlobalStyle`
     font-family: 'Poppins', sans-serif; 
 }
  
+html {
+  font-size: 62.5%;
+}
+
+label {
+  margin: 0 0 0.2rem 0;
+  color: #050E27;
+  font-weight: 600;
+}
+
 body {
-    background: #f1f1f1;
+    background: #0072FB;
     overflow-x: hidden;
   }
 `;

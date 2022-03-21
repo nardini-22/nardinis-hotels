@@ -2,11 +2,32 @@ import Modal from "components/Modal";
 import Portal from "HOC/portal";
 import _ from "lodash";
 import { useState } from "react";
-import ReactPaginate from "react-paginate";
+import { Oval } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
 import { GetHotelsList } from "redux/actions/hotelsActions";
+import { HotelImage } from "svg";
 import { IHotelsListProps, IHotelsListReducer } from "typings/hotels";
 import Filter from "./filter";
+import {
+  BodyContainer,
+  BodyWrapper, Form,
+  FormContainer,
+  Grid,
+  Header,
+  HotelImageContainer,
+  HotelsContainer,
+  HotelsList,
+  ImageContainer,
+  Input,
+  InputWrapper,
+  Line,
+  LoadingContainer,
+  Pagination,
+  PaginationContainer,
+  PrimaryButton,
+  SearchContainer,
+  SearchTitle
+} from "./styles";
 
 const Body = () => {
   const [city, setCity] = useState<string>("");
@@ -25,11 +46,11 @@ const Body = () => {
   const displayHotels = hotelsList.data
     .slice(visitedPages, visitedPages + hotelsPerPage)
     .map((hotel: IHotelsListProps) => (
-      <ul key={hotel.id}>
-        <li>{hotel.name}</li>
-        <li>{hotel.cityName}</li>
+      <HotelsList key={hotel.id}>
+        <h3>{hotel.name}</h3>
+        <p>{hotel.cityName}</p>
         <a href={`/${hotel.id}`}>Detalhes</a>
-      </ul>
+      </HotelsList>
     ));
   const handleData = () => {
     setPageNumber(0);
@@ -54,20 +75,40 @@ const Body = () => {
   };
   const showData = () => {
     if (hotelsList.loading) {
-      return <p>loading</p>;
+      return (
+        <LoadingContainer>
+          <Oval
+            secondaryColor="#001F69"
+            color="#0072FB"
+            height={80}
+            width={80}
+          />
+        </LoadingContainer>
+      );
     }
     if (!_.isEmpty(hotelsList.data)) {
       return (
         <>
-          {displayHotels}{" "}
-          <ReactPaginate
-            nextLabel="Next >"
-            previousLabel="< Previous"
-            pageCount={pageCount}
-            onPageChange={({ selected }) => {
-              setPageNumber(selected);
-            }}
-          />
+          <HotelsContainer>
+            <Grid>{displayHotels}</Grid>
+            <PaginationContainer>
+              <Pagination
+                nextLabel="Next >"
+                previousLabel="< Previous"
+                previousClassName="previous-page"
+                nextClassName="next-page"
+                disabledClassName="disabled-page"
+                activeClassName="active-page"
+                className="pagination"
+                pageRangeDisplayed={1}
+                marginPagesDisplayed={2}
+                pageCount={pageCount}
+                onPageChange={({ selected }) => {
+                  setPageNumber(selected);
+                }}
+              />
+            </PaginationContainer>
+          </HotelsContainer>
         </>
       );
     }
@@ -79,24 +120,44 @@ const Body = () => {
   };
   return (
     <>
-      <div>
-        <label>
-          Nome da cidade
-          <input
-            type="text"
-            placeholder="Insira a cidade aqui..."
-            onChange={(el) => setCity(el.target.value)}
-          />
-        </label>
-        <button onClick={() => handleData()}>Pesquisar</button>
-       
-        <Filter />
+      <BodyWrapper>
+        <BodyContainer>
+          <ImageContainer>
+            <HotelImageContainer>
+              <HotelImage />
+            </HotelImageContainer>
+          </ImageContainer>
+          <FormContainer>
+            <Header>
+              <h1>Comece reservando um lugar</h1>
+              <p>Ache o lugar que atenda sua necessidade, é facil!</p>
+            </Header>
+            <Form>
+              <SearchContainer>
+                <SearchTitle>Pesquisa simples</SearchTitle>
+                <InputWrapper>
+                  <label>Nome da cidade</label>
+                  <Input
+                    type="text"
+                    placeholder="Insira a cidade aqui..."
+                    onChange={(el) => setCity(el.target.value)}
+                  />
+                </InputWrapper>
+                <PrimaryButton onClick={() => handleData()}>
+                  Pesquisar
+                </PrimaryButton>
+              </SearchContainer>
+              <Line />
+              <Filter />
+            </Form>
+          </FormContainer>
+        </BodyContainer>
         <Portal>
           <Modal open={openModal} closeModal={() => setOpenModal(false)}>
             {showData()}
           </Modal>
         </Portal>
-      </div>
+      </BodyWrapper>
     </>
   );
 };
