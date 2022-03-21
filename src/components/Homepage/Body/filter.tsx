@@ -1,7 +1,7 @@
 import Modal from "components/Modal";
 import _ from "lodash";
 import { useState } from "react";
-import ReactPaginate from "react-paginate";
+import { Oval } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
 import { GetHotelsListFilter } from "redux/actions/hotelsActions";
 import {
@@ -9,6 +9,21 @@ import {
   IHotelsListProps,
   IHotelsParams
 } from "typings/hotels";
+import {
+  Grid,
+  HotelsContainer,
+  HotelsList,
+  Input,
+  InputWrapper,
+  LoadingContainer,
+  Pagination,
+  PaginationContainer,
+  PrimaryButton,
+  RoomContainer,
+  RoomSpan,
+  SearchContainer,
+  SearchTitle
+} from "./styles";
 
 const Filter = () => {
   const [city, setCity] = useState<string>("");
@@ -23,25 +38,35 @@ const Filter = () => {
   const getData = ({ id, adult, child }: IHotelsParams) => {
     dispatch(GetHotelsListFilter({ id, adult, child }));
   };
-  const hotelsPerPage = 10;
+  const hotelsPerPage = 4;
   const pageCount = Math.ceil(hotelsListFilter.data.length / hotelsPerPage);
   const visitedPages = pageNumber * hotelsPerPage;
   const displayHotels = hotelsListFilter.data
     .slice(visitedPages, visitedPages + hotelsPerPage)
     .map((hotel: IHotelsListProps) => (
-      <ul key={hotel.id}>
-        <li>{hotel.name}</li>
-        <li>{hotel.cityName}</li>
+      <HotelsList key={hotel.id}>
+        <h3>{hotel.name}</h3>
+        <p>{hotel.cityName}</p>
         {hotel.rooms.map((room) =>
           room === null ? null : (
-            <ul key={room.roomID}>
-              <li>{room.categoryName}</li>
-              <li>{room.price.adult}</li>
-              <li>{room.price.child}</li>
-            </ul>
+            <RoomContainer key={room.roomID}>
+              <h5>Quarto {room.roomID + 1}</h5>
+              <RoomSpan>
+                <p>Categoria: </p>
+                {room.categoryName}
+              </RoomSpan>
+              <RoomSpan>
+                <p>Preço adulto: </p>
+                R$ {room.price.adult}
+              </RoomSpan>
+              <RoomSpan>
+                <p>Preço criança </p>
+                R$ {room.price.child}
+              </RoomSpan>
+            </RoomContainer>
           )
         )}
-      </ul>
+      </HotelsList>
     ));
   const handleData = () => {
     setPageNumber(0);
@@ -66,20 +91,40 @@ const Filter = () => {
   };
   const showData = () => {
     if (hotelsListFilter.loading) {
-      return <p>loading</p>;
+      return (
+        <LoadingContainer>
+          <Oval
+            secondaryColor="#001F69"
+            color="#0072FB"
+            height={80}
+            width={80}
+          />
+        </LoadingContainer>
+      );
     }
     if (!_.isEmpty(hotelsListFilter.data)) {
       return (
         <>
-          {displayHotels}{" "}
-          <ReactPaginate
-            nextLabel="Next >"
-            previousLabel="< Previous"
-            pageCount={pageCount}
-            onPageChange={({ selected }) => {
-              setPageNumber(selected);
-            }}
-          />
+          <HotelsContainer>
+            <Grid>{displayHotels}</Grid>
+            <PaginationContainer>
+              <Pagination
+                nextLabel="Next >"
+                previousLabel="< Previous"
+                previousClassName="previous-page"
+                nextClassName="next-page"
+                disabledClassName="disabled-page"
+                activeClassName="active-page"
+                className="pagination"
+                pageRangeDisplayed={1}
+                marginPagesDisplayed={2}
+                pageCount={pageCount}
+                onPageChange={({ selected }) => {
+                  setPageNumber(selected);
+                }}
+              />
+            </PaginationContainer>
+          </HotelsContainer>
         </>
       );
     }
@@ -91,33 +136,36 @@ const Filter = () => {
   };
   return (
     <>
-      <label>
-        Nome da cidade
-        <input
-          type="text"
-          placeholder="Insira a cidade aqui..."
-          onChange={(el) => setCity(el.target.value)}
-        />
-      </label>
-      <label>
-        Valor máximo adulto
-        <input
-          type="number"
-          min={0}
-          placeholder="Insira a cidade aqui..."
-          onChange={(el) => setAdult(parseInt(el.target.value))}
-        />
-      </label>
-      <label>
-        Valor máximo criança
-        <input
-          type="number"
-          min={0}
-          placeholder="Insira a cidade aqui..."
-          onChange={(el) => setChild(parseInt(el.target.value))}
-        />
-      </label>
-      <button onClick={() => handleData()}>Pesquisar</button>
+      <SearchContainer>
+        <SearchTitle>Pesquisa avançada</SearchTitle>
+        <InputWrapper>
+          <label>Nome da cidade</label>
+          <Input
+            type="text"
+            placeholder="Insira a cidade aqui..."
+            onChange={(el) => setCity(el.target.value)}
+          />
+        </InputWrapper>
+        <InputWrapper>
+          <label>Valor máximo adulto</label>
+          <Input
+            type="number"
+            min={0}
+            placeholder="Insira o valor aqui..."
+            onChange={(el) => setAdult(parseInt(el.target.value))}
+          />
+        </InputWrapper>
+        <InputWrapper>
+          <label>Valor máximo criança</label>
+          <Input
+            type="number"
+            min={0}
+            placeholder="Insira o valor aqui..."
+            onChange={(el) => setChild(parseInt(el.target.value))}
+          />
+        </InputWrapper>
+        <PrimaryButton onClick={() => handleData()}>Pesquisar</PrimaryButton>
+      </SearchContainer>
       <Modal open={openModal} closeModal={() => setOpenModal(false)}>
         {showData()}
       </Modal>

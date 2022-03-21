@@ -1,4 +1,4 @@
-import { IModalProps } from "typings/hotels";
+import { IModalProps } from "typings/modal";
 import { ModalContainer, ModalOverlay, ModalWrapper } from "./styles";
 
 export default function Modal({ children, open, closeModal }: IModalProps) {

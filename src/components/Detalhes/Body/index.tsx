@@ -1,6 +1,15 @@
+import {
+  BodyWrapper,
+  Header,
+  HotelsDetailsContainer,
+  LoadingContainer,
+  RoomContainer,
+  RoomSpan
+} from "components/Homepage/Body/styles";
 import _ from "lodash";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
+import { Oval } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
 import { GetHotelsDetails } from "redux/actions/hotelsActions";
 import { IHotelsDetailsReducer, IHotelsListProps } from "typings/hotels";
@@ -16,27 +25,51 @@ const Body = () => {
     dispatch(GetHotelsDetails(id));
   };
   useEffect(() => {
-    getData(id);
+    if (id !== undefined) {
+      getData(id);
+    } else {
+      return;
+    }
   }, [id]);
   const showData = () => {
     if (hotelsDetails.loading) {
-      return <p>loading</p>;
+      return (
+        <LoadingContainer>
+          <Oval
+            secondaryColor="#001F69"
+            color="#0072FB"
+            height={80}
+            width={80}
+          />
+        </LoadingContainer>
+      );
     }
     if (!_.isEmpty(hotelsDetails.data)) {
       return (
         <>
           {hotelsDetails.data.map((hotel: IHotelsListProps) => (
-            <ul key={hotel.id}>
-              <li>{hotel.name}</li>
-              <li>{hotel.cityName}</li>
+            <HotelsDetailsContainer key={hotel.id}>
+              <Header>
+                <h1>Detalhes</h1>
+              </Header>
+              <h3>{hotel.name}</h3>
+              <p>{hotel.cityName}</p>
               {hotel.rooms.map((room) => (
-                <>
-                  <li>{room.categoryName}</li>
-                  <li>R$ {room.price.adult}</li>
-                  <li>R$ {room.price.child}</li>
-                </>
+                <RoomContainer key={room.roomID}>
+                  <h5>Quarto {room.roomID + 1}</h5>
+                  <RoomSpan>
+                    <p>Categoria: </p>
+                    {room.categoryName}
+                  </RoomSpan>
+                  <RoomSpan>
+                    <p>Preço adulto: </p>R$ {room.price.adult}
+                  </RoomSpan>
+                  <RoomSpan>
+                    <p>Preço criança: </p>R$ {room.price.child}
+                  </RoomSpan>
+                </RoomContainer>
               ))}
-            </ul>
+            </HotelsDetailsContainer>
           ))}
         </>
       );
@@ -46,7 +79,11 @@ const Body = () => {
     }
     return null;
   };
-  return <>{showData()}</>;
+  return (
+    <>
+      <BodyWrapper>{showData()}</BodyWrapper>
+    </>
+  );
 };
 
 export default Body;

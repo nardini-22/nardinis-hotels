@@ -66,9 +66,3 @@ export interface IHotelsParams {
   adult: number;
   child: number;
 }
-
-export interface IModalProps {
-  children: JSX.Element | null;
-  open: boolean;
-  closeModal: () => void;
-}
