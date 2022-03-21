@@ -22,7 +22,8 @@ import {
   RoomContainer,
   RoomSpan,
   SearchContainer,
-  SearchTitle
+  SearchTitle,
+  Select
 } from "./styles";
 
 const Filter = () => {
@@ -85,7 +86,7 @@ const Filter = () => {
       setOpenModal(true);
     } else {
       window.alert(
-        "Erro! Insira o nome correta da cidade (Ex: São Paulo, Porto Seguro ou Rio de Janeiro"
+        "Erro! Escolha uma cidade!"
       );
     }
   };
@@ -140,11 +141,14 @@ const Filter = () => {
         <SearchTitle>Pesquisa avançada</SearchTitle>
         <InputWrapper>
           <label>Nome da cidade</label>
-          <Input
-            type="text"
-            placeholder="Insira a cidade aqui..."
-            onChange={(el) => setCity(el.target.value)}
-          />
+          <Select onChange={(el) => setCity(el.target.value)}>
+            <option disabled={true} selected>
+              Escolha a cidade
+            </option>
+            <option value="São Paulo">São Paulo</option>
+            <option value="Porto Seguro">Porto Seguro</option>
+            <option value="Rio de Janeiro">Rio de Janeiro</option>
+          </Select>
         </InputWrapper>
         <InputWrapper>
           <label>Valor máximo adulto</label>
